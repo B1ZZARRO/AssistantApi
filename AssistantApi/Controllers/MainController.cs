@@ -157,5 +157,32 @@ namespace AssistantApi.Controllers
                 return new ObjectResult(new ApiResponseMessage(ex.Message));
             }
         }
+        
+        /// <summary>
+        /// Поиск по логину
+        /// </summary>
+        [Route("[action]")]
+        [HttpGet]
+        public ActionResult Login(string login)
+        {
+            try
+            {
+                var result = _context.Users
+                    .Where(x => x.Login == login)
+                    .Select(x => new UserData()
+                    {
+                        UserID = x.UserId,
+                        Login = x.Login,
+                        Password = x.Password,
+                        Name = x.Name
+                    }).ToList();
+                
+                return new ObjectResult(new ApiResponse<IEnumerable<UserData>>(result));
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new ApiResponseMessage(ex.Message));
+            }
+        }
     }
 }
